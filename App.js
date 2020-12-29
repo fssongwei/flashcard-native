@@ -1,21 +1,55 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
 
-export default function App() {
+// redux
+import thunk from "redux-thunk";
+import { Provider as ReduxProvider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import reducers from "./redux/reducers";
+// import Navigator from "./navigations/Navigator";
+
+// app
+import FlashcardApp from "./FlashcardApp";
+
+import { View, Text } from "react-native";
+import { Button } from "@ant-design/react-native";
+
+const store = createStore(reducers, applyMiddleware(thunk));
+
+const App = () => {
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    const loadFunc = async () => {
+      await Font.loadAsync(
+        "antoutline",
+        // eslint-disable-next-line
+        require("@ant-design/icons-react-native/fonts/antoutline.ttf")
+      );
+
+      await Font.loadAsync(
+        "antfill",
+        // eslint-disable-next-line
+        require("@ant-design/icons-react-native/fonts/antfill.ttf")
+      );
+      // eslint-disable-next-line
+      setIsReady(true);
+    };
+    loadFunc();
+  }, []);
+
+  if (!isReady) {
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ReduxProvider store={store}>
+      <FlashcardApp />
+    </ReduxProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
