@@ -5,6 +5,7 @@ import * as Font from "expo-font";
 // redux
 import thunk from "redux-thunk";
 import { Provider as ReduxProvider } from "react-redux";
+import { Provider } from "@ant-design/react-native";
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./redux/reducers";
 // import Navigator from "./navigations/Navigator";
@@ -13,7 +14,6 @@ import reducers from "./redux/reducers";
 import FlashcardApp from "./FlashcardApp";
 
 import { View, Text } from "react-native";
-import { Button } from "@ant-design/react-native";
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
@@ -47,7 +47,9 @@ const App = () => {
   }
   return (
     <ReduxProvider store={store}>
-      <FlashcardApp />
+      <Provider>
+        <FlashcardApp />
+      </Provider>
     </ReduxProvider>
   );
 };

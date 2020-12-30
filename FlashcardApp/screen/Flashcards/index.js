@@ -4,6 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import CategoriesPage from "./CategoriesPage";
 import ProfilePage from "./ProfilePage";
+import CardListPage from "./CardListPage";
+import FlashcardPage from "./FlashcardPage";
+import TagFilter from "./TagFilter";
 
 const Stack = createStackNavigator();
 
@@ -14,12 +17,29 @@ const Flashcards = () => {
         <Stack.Screen
           name="Categories"
           component={CategoriesPage}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Home" }}
         />
         <Stack.Screen
           name="Profile"
           component={ProfilePage}
           options={{ title: "" }}
+        />
+        <Stack.Screen
+          name="CardList"
+          component={CardListPage}
+          options={{ title: "" }}
+        />
+        <Stack.Screen
+          name="Flashcard"
+          component={FlashcardPage}
+          options={{ title: "" }}
+        />
+        <Stack.Screen
+          name="TagFilter"
+          component={TagFilter}
+          options={{
+            title: "Filter",
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

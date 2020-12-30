@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const Screen = ({ title, children }) => {
+const Screen = ({ title, children, style }) => {
   return (
-    <View style={styles.screen}>
+    <View style={{ ...styles.screen, ...style }}>
       {title && <Text style={styles.headerText}>{title}</Text>}
       {children}
     </View>
@@ -12,7 +12,7 @@ const Screen = ({ title, children }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     flex: 1,
     paddingTop: 50,
     paddingBottom: 30,
