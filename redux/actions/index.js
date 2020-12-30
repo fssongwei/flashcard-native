@@ -13,35 +13,41 @@ export const updateJWT = (jwt) => async (dispatch) => {
       jwt: jwt,
       user: user,
     };
-    console.log(user);
     dispatch({ type: UPDATE_JWT, payload: payload });
   } catch (error) {
     dispatch({ type: UPDATE_JWT, payload: false });
   }
 };
 
-export const logOut = (jwt) => async (dispatch) => {
+export const logOut = () => (dispatch) => {
+  dispatch({ type: LOGOUT });
+};
+
+export const fetchFlashcards = () => async (dispatch, getState) => {
   try {
-    RCTNetworking.clearCookies(() => {});
-    dispatch({ type: LOGOUT });
+    const { jwt } = getState();
+    let flashcards = (
+      await axios.get(`${API_SERVER}/flashcards`, { headers: { Cookie: jwt } })
+    ).data;
+    dispatch({ type: UPDATE_FLASHCARDS, payload: flashcards });
   } catch (error) {
-    // dispatch({ type: LOGOUT, payload: false });
+    console.log(error.toString());
+    // show some error message
   }
 };
 
-// export const fetchUser = () => async (dispatch) => {
-//   try {
-//     const res = await axios.get(`/auth/user`);
-//     dispatch({ type: FETCH_USER, payload: res.data });
-//   } catch (error) {
-//     dispatch({ type: FETCH_USER, payload: false });
-//   }
-// };
-
-export const fetchFlashcards = () => async (dispatch) => {
+export const deleteFlashcard = (id) => async (dispatch, getState) => {
   try {
-    let flashcards = (await axios.get("/api/flashcards")).data;
+    const { jwt } = getState();
+    await axios.delete(`${API_SERVER}/flashcards/${id}`, {
+      headers: { Cookie: jwt },
+    });
+    let flashcards = (
+      await axios.get(`${API_SERVER}/flashcards`, { headers: { Cookie: jwt } })
+    ).data;
     dispatch({ type: UPDATE_FLASHCARDS, payload: flashcards });
+    // history.push("/");
+    // message.info("Flashcard delete success!");
   } catch (error) {
     // show some error message
   }
@@ -68,18 +74,6 @@ export const updateFlashcard = (flashcard, id, history) => async (dispatch) => {
     dispatch({ type: UPDATE_FLASHCARDS, payload: flashcards });
     history.push(`/categories/${updatedFlashcard.category}`);
     // message.info("Flashcard updated!");
-  } catch (error) {
-    // show some error message
-  }
-};
-
-export const deleteFlashcard = (id, history) => async (dispatch) => {
-  try {
-    await axios.delete(`/api/flashcards/${id}`);
-    let flashcards = (await axios.get("/api/flashcards")).data;
-    dispatch({ type: UPDATE_FLASHCARDS, payload: flashcards });
-    history.push("/");
-    // message.info("Flashcard delete success!");
   } catch (error) {
     // show some error message
   }
